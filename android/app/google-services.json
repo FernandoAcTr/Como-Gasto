@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "990364696935",
+    "firebase_url": "https://como-gasto-e2f81.firebaseio.com",
+    "project_id": "como-gasto-e2f81",
+    "storage_bucket": "como-gasto-e2f81.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990364696935:android:6b58704c03f7c5dea3afc2",
+        "android_client_info": {
+          "package_name": "com.fernando.como_gasto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "990364696935-mmv17scl8hape7jfs65oced785bvsc41.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fernando.como_gasto",
+            "certificate_hash": "27d6d8f991ef8b6193fd80bf2c0bf154253c8cb7"
+          }
+        },
+        {
+          "client_id": "990364696935-rtlm0l2flqlbs52at32dv0pnvr2i72st.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoVGXQ7E65OlVQ23JKqsS-1bO7_DorLyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "990364696935-rtlm0l2flqlbs52at32dv0pnvr2i72st.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
