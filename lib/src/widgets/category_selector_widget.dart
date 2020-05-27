@@ -84,7 +84,8 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
   }
 
   void deleteCategory(String name, String userID){
-    DB.deleteCategory(name, userID);
+    var db = Provider.of<DBRepository>(context, listen: false);
+    db.deleteCategory(name);
   }
 }
 

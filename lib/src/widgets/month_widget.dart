@@ -107,7 +107,8 @@ class _MonthWidgetState extends State<MonthWidget> {
    }
 
    Widget _list(){
-     var user = Provider.of<LoginState>(context, listen: false).currentUser;
+     var db = Provider.of<DBRepository>(context, listen: false);
+
       return Expanded(
         child: ListView.separated(            
           itemBuilder: (BuildContext context, int index) {
@@ -116,7 +117,7 @@ class _MonthWidgetState extends State<MonthWidget> {
             double percent = 100 * catTotal / widget.total;
 
             return FutureBuilder(
-              future: DB.getCategoryIcon(catName, user.uid),
+              future: db.getCategoryIcon(catName),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
                   if(snapshot.hasData){
 

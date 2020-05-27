@@ -59,11 +59,12 @@ class _AddExpensePageState extends State<AddExpensePage> {
   }
 
   Widget _categorySelector(){
-    var user = Provider.of<LoginState>(context, listen: false).currentUser;
+    var db = Provider.of<DBRepository>(context, listen: false);
+
     return Container(
       height: 80.0,
       child: StreamBuilder<QuerySnapshot>(
-        stream: DB.getCategories(user.uid),
+        stream: db.getCategories(),
         builder: (context, snapshot) {
           if(!snapshot.hasData)
             return CircularProgressIndicator();
@@ -205,6 +206,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
   }
 
   Widget _submit(){
+    var db = Provider.of<DBRepository>(context, listen: false);
+
     return Hero(
       tag: 'floating',
       child: Container(
@@ -216,7 +219,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
           onPressed: (){
             if(realValue > 0 && category != ''){
               var user = Provider.of<LoginState>(context, listen: false).currentUser;
-              DB.addExpense(category, realValue, user.uid);
+              db.addExpense(category, realValue);
               Navigator.of(context).pop();
             }else
               utils.mostrarSnackbar(scaffoldKey, 'Slect a value and a category');

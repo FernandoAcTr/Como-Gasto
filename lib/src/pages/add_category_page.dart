@@ -1,4 +1,3 @@
-import 'package:como_gasto/src/providers/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:como_gasto/src/firestore/db.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart' as iconUtils;
@@ -119,7 +118,7 @@ class _AddCategoryState extends State<AddCategoryPage> {
   }
 
   Widget _addButton(){
-    var user = Provider.of<LoginState>(context, listen: false).currentUser;
+    var db = Provider.of<DBRepository>(context, listen: false);
     return Container(
       width: double.infinity,
       height: 50.0,
@@ -127,7 +126,7 @@ class _AddCategoryState extends State<AddCategoryPage> {
         child: Text('Add Category'),
         color: Colors.blueAccent,
         onPressed: (){
-           DB.addCategory(currentIcon, categoryName, user.uid);
+           db.addCategory(currentIcon, categoryName);
            Navigator.of(context).pop();
         },
       ),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:como_gasto/src/firestore/db.dart';
-import 'package:como_gasto/src/providers/login_state.dart';
 
 class DetailsParams {
   final month;
@@ -36,10 +35,10 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _body() {
-    var loginState = Provider.of<LoginState>(context);
+    var db = Provider.of<DBRepository>(context, listen: false);
 
     return StreamBuilder<QuerySnapshot>(
-        stream: DB.getCategoryExpenses(params.category, params.year, params.month + 1, loginState.currentUser.uid),
+        stream: db.getCategoryExpenses(params.category, params.year, params.month + 1),
         builder: (context, snapshot) {
 
           if (!snapshot.hasData)
@@ -53,7 +52,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   child: DayExpenseListTile(document: document),
                   background: Container(color: Colors.red),
                   onDismissed: (direction){
-                    DB.deleteCategoryExpense(document.documentID, loginState.currentUser.uid);
+                    db.deleteCategoryExpense(document.documentID);
                   },
               );
 

@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DB {
+class DBRepository {
 
-  static void addExpense(String category, double value, String userID) {
+  String _userID;
+
+  DBRepository(this._userID);
+
+  void addExpense(String category, double value) {
     Firestore.instance
       .collection('users')
-      .document(userID)
+      .document(_userID)
       .collection('expenses').document().setData({
           'category': category,
           'value': value,
@@ -16,36 +20,36 @@ class DB {
       );
   }
 
-  static Stream<QuerySnapshot> getExpenses(int year, int month, String userID) {
+  Stream<QuerySnapshot> getExpenses(int year, int month) {
     return Firestore.instance
         .collection('users')
-        .document(userID)
+        .document(_userID)
         .collection('expenses')
         .where('year', isEqualTo: year)
         .where("month", isEqualTo: month)
         .snapshots();
   }
 
-  static void addCategory(String icon, String name, String userID) {
+  void addCategory(String icon, String name) {
     Firestore.instance
         .collection('users')
-        .document(userID)
+        .document(_userID)
         .collection('categories')
         .document()
         .setData({'icon': icon, 'name': name});
   }
 
-  static Stream<QuerySnapshot> getCategories(String userID) {
+  Stream<QuerySnapshot> getCategories() {
     return Firestore.instance
     .collection('users')
-    .document(userID)
+    .document(_userID)
     .collection('categories').snapshots();
   }
 
-  static Future<QuerySnapshot> getCategoryIcon(String categoryName, String userID) async {
+  Future<QuerySnapshot> getCategoryIcon(String categoryName) async {
     final query = Firestore.instance
         .collection('users')
-        .document(userID)
+        .document(_userID)
         .collection('categories')
         .where('name', isEqualTo: categoryName)
         .snapshots()
@@ -54,10 +58,10 @@ class DB {
     return query;
   }
 
-  static deleteCategory(String name, String userID) async {
+  void deleteCategory(String name) async {
     final query =  await Firestore.instance
           .collection('users')
-          .document(userID)
+          .document(_userID)
           .collection('categories')
           .where('name', isEqualTo: name)
           .snapshots()
@@ -69,15 +73,15 @@ class DB {
 
     Firestore.instance
     .collection('users')
-    .document(userID)
+    .document(_userID)
     .collection('categories')
     .document(doc.documentID).delete();
   }
 
-  static getCategoryExpenses(String category, int year, int month, String userID){
+  Stream<QuerySnapshot> getCategoryExpenses(String category, int year, int month){
       return Firestore.instance
         .collection('users')
-        .document(userID)
+        .document(_userID)
         .collection('expenses')
         .where('year', isEqualTo: year)
         .where("month", isEqualTo: month)
@@ -85,10 +89,10 @@ class DB {
         .snapshots();
   }
 
-  static deleteCategoryExpense(String expenseID, String userID){
+  void deleteCategoryExpense(String expenseID){
       Firestore.instance
         .collection('users')
-        .document(userID)
+        .document(_userID)
         .collection('expenses')
         .document(expenseID)
         .delete();

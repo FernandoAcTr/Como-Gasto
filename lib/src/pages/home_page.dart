@@ -102,15 +102,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _body(){
-    var user = Provider.of<LoginState>(context, listen: false).currentUser;
     // var dateProvider = Provider.of<DateProvider>(context, listen: false);
+    var db = Provider.of<DBRepository>(context, listen: false);
+
 
     return Column(
       children: <Widget>[
         _yearSelector(),
         _monthSelector(),    
         StreamBuilder<QuerySnapshot>(
-          stream: DB.getExpenses(dateProvider.year, dateProvider.month+1, user.uid),
+          stream: db.getExpenses(dateProvider.year, dateProvider.month+1),
           builder: (context, snapshot) {
             if(snapshot.hasData){
                 if(snapshot.data.documents.length > 0){

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:como_gasto/src/firestore/db.dart';
 import 'package:como_gasto/src/providers/date_provider.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/pages/add_category_page.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<LoginState>(create: (context) => LoginState()),
         ChangeNotifierProvider<DateProvider>(create: (context) => DateProvider()),
+        ProxyProvider<LoginState, DBRepository>(update: (_, LoginState login, __) => DBRepository(login.currentUser.uid),)
       ],
       child: MaterialApp(
         title: 'Como Gasto',
