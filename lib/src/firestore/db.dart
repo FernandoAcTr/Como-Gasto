@@ -6,16 +6,16 @@ class DBRepository {
 
   DBRepository(this._userID);
 
-  void addExpense(String category, double value) {
+  void addExpense(String category, double value, DateTime date) {
     Firestore.instance
       .collection('users')
       .document(_userID)
       .collection('expenses').document().setData({
           'category': category,
           'value': value,
-          'month': DateTime.now().month,
-          'day': DateTime.now().day,
-          'year': DateTime.now().year
+          'month': date.month,
+          'day': date.day,
+          'year': date.year
         }
       );
   }
