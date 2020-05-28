@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-import 'package:como_gasto/src/providers/login_state.dart';
 import 'package:como_gasto/src/firestore/db.dart';
 import 'package:como_gasto/src/widgets/graph_widget.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart' as iconUtils;

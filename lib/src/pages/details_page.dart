@@ -13,56 +13,67 @@ class DetailsParams {
   DetailsParams(this.month, this.year, this.category);
 }
 
-class DetailsPage extends StatefulWidget {
+class DetailsPageContainer extends StatefulWidget {
   @override
-  _DetailsPageState createState() => _DetailsPageState();
+  _DetailsPageContainerState createState() => _DetailsPageContainerState();
 }
 
-class _DetailsPageState extends State<DetailsPage> {
+///ContainerViewPattern donde el widget que encapsula toda la logica
+///Contiene denro al widget que representa la vista
+class _DetailsPageContainerState extends State<DetailsPageContainer> {
   DetailsParams params;
 
   @override
   Widget build(BuildContext context) {
     params = ModalRoute.of(context).settings.arguments;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(params.category),
-        centerTitle: true,
-      ),
-      body: _body(),
-    );
-  }
-
-  Widget _body() {
     var db = Provider.of<DBRepository>(context, listen: false);
 
     return StreamBuilder<QuerySnapshot>(
         stream: db.getCategoryExpenses(params.category, params.year, params.month + 1),
         builder: (context, snapshot) {
-
           if (!snapshot.hasData)
             return Center(child: CircularProgressIndicator());
 
-
-          var widgets = snapshot.data.documents.map((document) {
-            
-            return Dismissible(
-                  key: UniqueKey(),
-                  child: DayExpenseListTile(document: document),
-                  background: Container(color: Colors.red),
-                  onDismissed: (direction){
-                    db.deleteCategoryExpense(document.documentID);
-                  },
-              );
-
-          }).toList();
-
-          return ListView(
-            children: widgets,       
+          return _DetailsPage(
+            categoryName: params.category,
+            documentList: snapshot.data.documents,
+            onDelete: (String documentId){
+              db.deleteCategoryExpense(documentId);
+            },
           );
         });
   }
-
 }
 
+class _DetailsPage extends StatelessWidget {
+  final String categoryName;
+  final List<DocumentSnapshot> documentList;
+  final Function(String) onDelete;
+
+  const _DetailsPage({Key key, this.categoryName, this.documentList, this.onDelete})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(categoryName),
+        centerTitle: true,
+      ),
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          var document = documentList[index];
+          return Dismissible(
+            key: UniqueKey(),
+            child: DayExpenseListTile(document: document),
+            background: Container(color: Colors.red),
+            onDismissed: (direction) {
+              onDelete(document.documentID);
+            },
+          );
+        },
+        itemCount: documentList.length,
+      ),
+    );
+  }
+}

@@ -102,9 +102,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _body(){
-    // var dateProvider = Provider.of<DateProvider>(context, listen: false);
     var db = Provider.of<DBRepository>(context, listen: false);
-
 
     return Column(
       children: <Widget>[

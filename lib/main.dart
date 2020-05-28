@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           },
           Routes.addExpensePage: (context) => AddExpensePage(),
           Routes.addCategoryPage: (context) => AddCategoryPage(),
-          Routes.detailsPage: (context) => DetailsPage(),
+          Routes.detailsPage: (context) => DetailsPageContainer(),
         },
       ),
     );
