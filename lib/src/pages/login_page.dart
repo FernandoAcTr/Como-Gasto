@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:como_gasto/src/providers/login_state.dart';
 
 class LoginPage extends StatefulWidget {
@@ -79,10 +80,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget _image() {
     return Column(
       children: <Widget>[
-        Image.asset(
-          'assets/img/initial-image.png',
+        // Image.asset(
+        //   'assets/img/initial-image.png',
+        //   height: 250.0,
+        //   width: double.infinity,
+        // ),
+        Container(
           height: 250.0,
           width: double.infinity,
+          child: FlareActor('assets/img/splash.flr', animation: 'idle',),
         ),
         Text('Your personal finance app')
       ],

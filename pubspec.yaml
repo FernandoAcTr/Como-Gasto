@@ -33,6 +33,7 @@ dependencies:
   shared_preferences: ^0.5.7
   rect_getter: ^0.1.0
   flutter_local_notifications: ^1.4.2
+  flare_flutter: 
 
 dev_dependencies:
   flutter_test:
