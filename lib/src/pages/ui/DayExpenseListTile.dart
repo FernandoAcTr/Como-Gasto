@@ -1,11 +1,12 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class DayExpenseListTile extends StatelessWidget {
-
   final document;
-  
+
   const DayExpenseListTile({
-    Key key, this.document,
+    Key key,
+    this.document,
   }) : super(key: key);
 
   @override
@@ -44,7 +45,37 @@ class DayExpenseListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(5.0),
           color: Colors.blueAccent.withOpacity(0.2),
         ),
-      ),      
+      ),
+      subtitle: document['imagePath'] == null
+          ? null
+          : FutureBuilder<String>(
+              future: _getDownloadURL(document['imagePath']),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData){
+                  print('Snapshot: ' + snapshot.data);
+                  return _getImage(snapshot.data);
+                } 
+                return Center(child: CircularProgressIndicator());
+              },
+            ),
+    );
+  }
+
+  Future<String> _getDownloadURL(String imagePath) async {
+    final StorageReference storageReference =
+        FirebaseStorage().ref().child(imagePath);
+    var url = (await storageReference.getDownloadURL()).toString();
+    return url;
+  }
+
+  Widget _getImage(String imagePath) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: Image.network(
+        imagePath,
+        height: 200.0,
+        width: double.infinity,
+      ),
     );
   }
 }

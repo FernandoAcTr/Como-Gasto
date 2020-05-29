@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
-import 'package:como_gasto/src/providers/login_state.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/firestore/db.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart';
@@ -21,43 +23,52 @@ class _AddExpensePageState extends State<AddExpensePage> {
   double realValue = 0;
   String dateStr = 'Hoy';
   DateTime date = DateTime.now();
+  File _foto;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        leading: BackButton(
+          color: Colors.grey,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         automaticallyImplyLeading: false,
         elevation: 0.0,
-        title: GestureDetector(
-          onTap: () {
-            showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now().subtract(Duration(days: 7)),
-                lastDate: DateTime.now(),
-            ).then((newValue){
-              setState(() {
-                date = newValue;
-                String mes = date.month < 9 ? '0${date.month}' : date.month.toString();
-                String dia = date.day < 9 ? '0${date.day}' : date.day.toString();                
-                dateStr = '${date.year}/$mes/$dia';
-              });
-            });
-          },
-          child: Text(
-            'Category ($dateStr)',
-            style: TextStyle(color: Colors.grey),
-          ),
+        title: Text(
+          'Category ($dateStr)',
+          style: TextStyle(color: Colors.grey),
         ),
         centerTitle: false,
         backgroundColor: Colors.transparent,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () => Navigator.of(context).pop(),
+            icon: Icon(Icons.calendar_today),
             color: Colors.grey,
-          )
+            onPressed: () {
+              showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now().subtract(Duration(days: 7)),
+                lastDate: DateTime.now(),
+              ).then((newValue) {
+                setState(() {
+                  date = newValue;
+                  String mes =
+                      date.month < 9 ? '0${date.month}' : date.month.toString();
+                  String dia =
+                      date.day < 9 ? '0${date.day}' : date.day.toString();
+                  dateStr = '${date.year}/$mes/$dia';
+                });
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.camera_alt),
+            color: Colors.grey,
+            onPressed: () => _procesarImagen(ImageSource.camera),
+          ),
         ],
       ),
       body: _body(),
@@ -68,6 +79,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
     return Column(
       children: <Widget>[
         _categorySelector(),
+        _expenseImage(),
         _currentValue(),
         _numPad(),
         _submit()
@@ -107,9 +119,22 @@ class _AddExpensePageState extends State<AddExpensePage> {
     );
   }
 
+  Widget _expenseImage(){
+    if(_foto != null){
+      return Container(
+        height: 120.0,
+        width: double.infinity,
+        padding: EdgeInsets.only(top: 10.0),
+        child: Image.file(_foto),
+      );
+    }else{
+      return Container();
+    }
+  }
+
   Widget _currentValue() {
     return Container(
-      height: 120.0,
+      height: 100.0,
       child: Center(
         child: Text(
           '\$${realValue.toStringAsFixed(2)}',
@@ -120,7 +145,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
         ),
       ),
     );
-  }
+  }  
 
   Widget _numPad() {
     return Expanded(child: LayoutBuilder(builder: (context, constraints) {
@@ -206,7 +231,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
           color: Colors.blueAccent,
           onPressed: () {
             if (realValue > 0 && category != '') {
-              db.addExpense(category, realValue, date);
+              db.addExpense(category, realValue, date, _foto);
               Navigator.of(context).pop();
             } else
               utils.mostrarSnackbar(
@@ -215,5 +240,17 @@ class _AddExpensePageState extends State<AddExpensePage> {
         ),
       ),
     );
+  }
+
+  void _procesarImagen(ImageSource source) async {
+    var picker = ImagePicker();
+
+    final picketFile = await picker.getImage(source: source);
+    if (picketFile != null) {
+      _foto = new File(picketFile.path);
+
+    }
+
+    setState(() {});
   }
 }
