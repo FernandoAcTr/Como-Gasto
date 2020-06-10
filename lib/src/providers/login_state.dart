@@ -2,9 +2,14 @@ import 'package:como_gasto/src/shared_prefs/preferencias_usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+
+import 'package:como_gasto/src/keys/keys.dart' as keys;
+
+enum LoginType { GOOGLE, FACEBOOK, TWITTER }
 
 class LoginState with ChangeNotifier {
-
   //manejo de estado
   bool _loggedIn = false;
   bool _loading = true;
@@ -14,9 +19,14 @@ class LoginState with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseUser _user;
 
+  final _facebookLogin = FacebookLogin();
+  // final _twitterLogin = new TwitterLogin(
+  //   consumerKey: keys.TWITTER_API,
+  //   consumerSecret: keys.TWITTER_SECRET,
+  // );
+
   //guardar las preferencias
   final _prefs = PreferenciasUsuario();
-
 
   bool get isLoggedIn => _loggedIn;
 
@@ -25,35 +35,55 @@ class LoginState with ChangeNotifier {
   FirebaseUser get currentUser => _user;
 
   LoginState() {
-    loginState();    
+    loadLoginState();
   }
 
-  void login() async {
+  void login(LoginType loginType) async {
     _loading = true;
     notifyListeners();
 
-    _user  = await _handleSignIn();
+    switch (loginType) {
+      case LoginType.GOOGLE:
+        _user = await _handleGoogleSignIn();
+
+        break;
+      case LoginType.TWITTER:
+        // _user = await _handleTwitterSignIn();
+
+        break;
+
+      case LoginType.FACEBOOK:
+        _user = await _handleFacebookSignIn();
+    }
 
     _loading = false;
-    if(_user != null){
-      _loggedIn = true;     
-      _prefs.loggedIn = true; 
-    }else{
+
+    if (_user != null) {
+      _loggedIn = true;
+      _prefs.loggedIn = true;
+    } else {
       _loggedIn = false;
     }
 
     notifyListeners();
   }
 
-  void logout() {
+  void logout() async {
     _prefs.clear();
-    _googleSignIn.signOut();
+
+    if (await _googleSignIn.isSignedIn()) _googleSignIn.signOut();
+    else if(await _facebookLogin.isLoggedIn) _facebookLogin.logOut();
+    // else if (await _twitterLogin.isSessionActive) _twitterLogin.logOut();
+    _auth.signOut();
+
     _loggedIn = false;
     notifyListeners();
   }
- 
-  Future<FirebaseUser> _handleSignIn() async {
+
+  Future<FirebaseUser> _handleGoogleSignIn() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) return null;
+
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
@@ -62,19 +92,50 @@ class LoginState with ChangeNotifier {
       idToken: googleAuth.idToken,
     );
 
+    var user = await loginInFirebase(credential);
+    return user;
+  }
+
+  // Future<FirebaseUser> _handleTwitterSignIn() async {
+  //   final twitterResult = await _twitterLogin.authorize();
+  //   if (twitterResult.status != TwitterLoginStatus.loggedIn) return null;
+
+  //   final session = twitterResult.session;
+
+  //   AuthCredential credential = TwitterAuthProvider.getCredential(
+  //     authToken: session.token,
+  //     authTokenSecret: session.secret,
+  //   );
+
+  //   var user = await loginInFirebase(credential);
+  //   return user;
+  // }
+
+  Future<FirebaseUser> _handleFacebookSignIn() async {
+    final fbResult = await _facebookLogin.logIn(['email']);
+    if (fbResult.status != FacebookLoginStatus.loggedIn) return null;
+
+    AuthCredential credential = FacebookAuthProvider.getCredential(
+        accessToken: fbResult.accessToken.token);
+
+    var user = await loginInFirebase(credential);
+    return user;
+  }
+
+  Future<FirebaseUser> loginInFirebase(AuthCredential credential) async {
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
     print("signed in " + user.displayName);
     return user;
   }
 
-  void loginState() async {
-    if(_prefs.loggedIn){
+  void loadLoginState() async {
+    if (_prefs.loggedIn) {
       _user = await _auth.currentUser();
       _loggedIn = _user != null;
       _loading = false;
       notifyListeners();
-    }else{
+    } else {
       _loading = false;
       notifyListeners();
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:como_gasto/src/providers/login_state.dart';
@@ -40,10 +41,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _login(BuildContext context) {
-    Provider.of<LoginState>(context, listen: false).login();
-  }
-
   Widget _body(BuildContext context) {
     return Center(
       child: Consumer<LoginState>(
@@ -61,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
             _whiteSpace(),
             _image(),
             _whiteSpace(),
-            _loginButton(),
+            _loginButtons(),
             _whiteSpace(),
             _footer(context),
           ],
@@ -88,22 +85,42 @@ class _LoginPageState extends State<LoginPage> {
         Container(
           height: 250.0,
           width: double.infinity,
-          child: FlareActor('assets/img/splash.flr', animation: 'idle',),
+          child: FlareActor(
+            'assets/img/splash.flr',
+            animation: 'idle',
+          ),
         ),
         Text('Your personal finance app')
       ],
     );
   }
 
-  Widget _loginButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        RaisedButton(
-          child: Text('Sing In with Google'),
-          onPressed: () => _login(context),
-        )
-      ],
+  Widget _loginButtons() {
+    return Container(
+      width: 220.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          FloatingActionButton(
+            backgroundColor: Color(0xff4285f4),
+            child: Icon(FontAwesomeIcons.google),
+            onPressed: () =>
+                Provider.of<LoginState>(context, listen: false).login(LoginType.GOOGLE),
+          ),
+          FloatingActionButton(
+            backgroundColor: Color.fromRGBO(0, 172, 238, 1),
+            child: Icon(FontAwesomeIcons.twitter),
+            onPressed: () =>
+                Provider.of<LoginState>(context, listen: false).login(LoginType.TWITTER),
+          ),
+          FloatingActionButton(
+            backgroundColor: Color.fromRGBO(59, 89, 152, 1),
+            child: Icon(FontAwesomeIcons.facebook),
+            onPressed: () =>
+                Provider.of<LoginState>(context, listen: false).login(LoginType.FACEBOOK),
+          ),
+        ],
+      ),
     );
   }
 

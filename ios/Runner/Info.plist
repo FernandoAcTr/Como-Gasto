@@ -6,6 +6,8 @@
 	<string>Se necesita acceso a la galeria</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Se necesita acceso a la camara</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Necesita permisos de reconocimiento facial</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Se necesita acceso al microfono para grabar videos</string>
 	<key>CFBundleDevelopmentRegion</key>

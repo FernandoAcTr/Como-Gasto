@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:local_auth/local_auth.dart';
 
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/firestore/db.dart';
@@ -18,12 +19,28 @@ class AddExpensePage extends StatefulWidget {
 
 class _AddExpensePageState extends State<AddExpensePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  //variables para el estado del expense
   String category = '';
   int value = 0;
   double realValue = 0;
   String dateStr = 'Hoy';
   DateTime date = DateTime.now();
   File _foto;
+
+  //local autentication
+  LocalAuthentication _localAuth;
+  bool _isBiometricAvailable = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _localAuth = LocalAuthentication();
+    _localAuth.canCheckBiometrics.then((b) {
+      setState(() {
+        _isBiometricAvailable = b;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,15 +136,15 @@ class _AddExpensePageState extends State<AddExpensePage> {
     );
   }
 
-  Widget _expenseImage(){
-    if(_foto != null){
+  Widget _expenseImage() {
+    if (_foto != null) {
       return Container(
         height: 120.0,
         width: double.infinity,
         padding: EdgeInsets.only(top: 10.0),
         child: Image.file(_foto),
       );
-    }else{
+    } else {
       return Container();
     }
   }
@@ -145,7 +162,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
         ),
       ),
     );
-  }  
+  }
 
   Widget _numPad() {
     return Expanded(child: LayoutBuilder(builder: (context, constraints) {
@@ -219,24 +236,32 @@ class _AddExpensePageState extends State<AddExpensePage> {
   }
 
   Widget _submit() {
-    var db = Provider.of<DBRepository>(context, listen: false);
-
     return Hero(
       tag: 'floating',
       child: Container(
         width: double.infinity,
         height: 50.0,
         child: MaterialButton(
-          child: Text('Submit'),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Add Expense',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+              if (_isBiometricAvailable)
+                Icon(
+                  Icons.fingerprint,
+                  color: Colors.white,
+                  size: 40.0,
+                )
+            ],
+          ),
           color: Colors.blueAccent,
-          onPressed: () {
-            if (realValue > 0 && category != '') {
-              db.addExpense(category, realValue, date, _foto);
-              Navigator.of(context).pop();
-            } else
-              utils.mostrarSnackbar(
-                  scaffoldKey, 'Slect a value and a category');
-          },
+          onPressed: () => _addExpenseAction(),
         ),
       ),
     );
@@ -248,9 +273,37 @@ class _AddExpensePageState extends State<AddExpensePage> {
     final picketFile = await picker.getImage(source: source);
     if (picketFile != null) {
       _foto = new File(picketFile.path);
-
     }
 
     setState(() {});
+  }
+
+  ///Metodo que agrega la expense y la sube a la base de datos
+  void _addExpenseAction() async {
+    var db = Provider.of<DBRepository>(context, listen: false);
+
+    if (realValue > 0 && category != '') {
+      if (_isBiometricAvailable) {
+        if (await authenticate())
+          _saveAndBack(db);
+        else
+          utils.mostrarSnackbar(scaffoldKey, 'Please identify by yourself');
+      } else
+        _saveAndBack(db);
+    } else
+      utils.mostrarSnackbar(scaffoldKey, 'Select a value and a category');
+  }
+
+  void _saveAndBack(DBRepository db) {
+    db.addExpense(category, realValue, date, _foto);
+    Navigator.of(context).pop();
+  }
+
+  ///Autentifica al usuario de forma local por huella digital
+  Future<bool> authenticate() async {
+    bool didAuthenticate = await _localAuth.authenticateWithBiometrics(
+      localizedReason: 'Please identify yoursel ',
+    );
+    return didAuthenticate;
   }
 }
