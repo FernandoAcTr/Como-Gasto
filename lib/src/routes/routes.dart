@@ -4,4 +4,5 @@ class Routes{
   static final addExpensePage = 'add_expense';
   static final detailsPage = 'details';
   static final loginPage = 'login';
+  static final settingsPage = 'settings';
 }

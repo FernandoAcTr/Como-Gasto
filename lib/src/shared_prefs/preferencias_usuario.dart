@@ -23,12 +23,15 @@ class PreferenciasUsuario {
   // GET y SET del loggedInd
   bool get loggedIn => _prefs.getBool('loggedIn') ?? false;
   
-  bool get containsLoggedIn => _prefs.containsKey('loggedIn');
-  
   set loggedIn( bool value ) {
     _prefs.setBool('loggedIn', value);
-  }  
+  }
+
+  // GET y SET del darkMode
+  bool get darkMode => _prefs.getBool('darkMode') ?? false;
   
-
+  set darkMode( bool value ) {
+    _prefs.setBool('darkMode', value);  
+  }
+  
 }
-

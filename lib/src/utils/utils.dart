@@ -10,6 +10,8 @@ void mostrarSnackbar(GlobalKey<ScaffoldState> scaffoldKey, String mensaje){
     scaffoldKey.currentState.showSnackBar(snackbar);
 }
 
+///Obtiene los dias que hay en un mes
+///Si se selecciona el dia 0 de un mes en DateTime mos regresa el ultimo dia del mes anterior
 int daysInMonth(int month){
   var now = DateTime.now();
 

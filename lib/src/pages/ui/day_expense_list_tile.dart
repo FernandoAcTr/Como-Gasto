@@ -1,6 +1,8 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+///ListTile utilizado en DetailsPage para mostrar cada uno de los gastos
+///
 class DayExpenseListTile extends StatelessWidget {
   final document;
 
@@ -61,6 +63,7 @@ class DayExpenseListTile extends StatelessWidget {
     );
   }
 
+  ///Obtener el enlace de descarga de una imagen a partir del imagePath
   Future<String> _getDownloadURL(String imagePath) async {
     final StorageReference storageReference =
         FirebaseStorage().ref().child(imagePath);
@@ -68,11 +71,12 @@ class DayExpenseListTile extends StatelessWidget {
     return url;
   }
 
-  Widget _getImage(String imagePath) {
+  ///Regresa una Image a partir de un URL 
+  Widget _getImage(String imageUrl) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: Image.network(
-        imagePath,
+        imageUrl,
         height: 200.0,
         width: double.infinity,
       ),

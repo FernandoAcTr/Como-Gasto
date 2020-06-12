@@ -34,6 +34,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
   @override
   void initState() {
     super.initState();
+
+    //verificar si el telefono cuenta con sensores biometricos
     _localAuth = LocalAuthentication();
     _localAuth.canCheckBiometrics.then((b) {
       setState(() {
@@ -157,7 +159,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
           '\$${realValue.toStringAsFixed(2)}',
           style: TextStyle(
               fontSize: 50.0,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold),
         ),
       ),
@@ -260,7 +262,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 )
             ],
           ),
-          color: Colors.blueAccent,
+          color: Theme.of(context).primaryColor,
           onPressed: () => _addExpenseAction(),
         ),
       ),

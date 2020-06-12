@@ -27,7 +27,7 @@ class DBRepository {
     if (photo != null) {
       var imageName = Uuid().v1();
       var imagePath = '/users/$_userID/$imageName.jpg';
-      var resizedImagePath = '/users/$_userID/${imageName}_200x200.jpg';
+      var resizedImagePath = '/users/$_userID/${imageName}_200x200.jpg'; //el path que genera automaticamente firebase Storage
 
       final StorageReference storageReference = FirebaseStorage().ref().child(imagePath);
       final StorageUploadTask uploadTask = storageReference.putFile(photo);
@@ -45,7 +45,7 @@ class DBRepository {
 
       // Cancel your subscription when done.
       await uploadTask.onComplete;
-      streamSubscription.cancel();
+      streamSubscription.cancel(); //liberamos memoria
       document.setData({'imagePath': resizedImagePath}, merge: true);
     }
   }

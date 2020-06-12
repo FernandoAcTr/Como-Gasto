@@ -11,7 +11,7 @@ import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/utils/utils.dart';
 import 'package:como_gasto/src/widgets/month_widget.dart';
 import 'package:como_gasto/src/firestore/db.dart';
-import 'package:como_gasto/src/providers/login_state.dart';
+import 'package:como_gasto/src/providers/login_state_provider.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(width: 48.0),
                 _iconButton(FontAwesomeIcons.wallet, (){}),
                 _iconButton(Icons.settings, (){
-                  Provider.of<LoginState>(context, listen: false).logout();
+                    Navigator.of(context).pushNamed(Routes.settingsPage);
                 }),
             ],
           ),
@@ -141,10 +141,10 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-  Widget _pageItem(String name, int position){
+  Widget _monthSelectorItem(String name, int position){
     var selected = TextStyle(
       fontSize: 20.0,
-      color: Colors.blueGrey,
+      color: Theme.of(context).accentColor,
       fontWeight: FontWeight.bold
     );
 
@@ -183,18 +183,18 @@ class _HomePageState extends State<HomePage> {
           print(dateProvider.month);
         },
         children: <Widget>[
-          _pageItem('Enero',0),
-          _pageItem('Febrero',1),
-          _pageItem('Marzo',2),
-          _pageItem('Abril',3),
-          _pageItem('Mayo',4),
-          _pageItem('Junio',5),
-          _pageItem('Julio',6),
-          _pageItem('Agosto',7),
-          _pageItem('Septiembre',8),
-          _pageItem('Octubre',9),
-          _pageItem('Noviembre',10),
-          _pageItem('Diciembre',11),
+          _monthSelectorItem('Enero',0),
+          _monthSelectorItem('Febrero',1),
+          _monthSelectorItem('Marzo',2),
+          _monthSelectorItem('Abril',3),
+          _monthSelectorItem('Mayo',4),
+          _monthSelectorItem('Junio',5),
+          _monthSelectorItem('Julio',6),
+          _monthSelectorItem('Agosto',7),
+          _monthSelectorItem('Septiembre',8),
+          _monthSelectorItem('Octubre',9),
+          _monthSelectorItem('Noviembre',10),
+          _monthSelectorItem('Diciembre',11),
         ],
       ),
     );

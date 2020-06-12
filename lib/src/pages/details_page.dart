@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:como_gasto/src/pages/ui/DayExpenseListTile.dart';
+import 'package:como_gasto/src/pages/ui/day_expense_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,8 +18,8 @@ class DetailsPageContainer extends StatefulWidget {
   _DetailsPageContainerState createState() => _DetailsPageContainerState();
 }
 
-///ContainerViewPattern donde el widget que encapsula toda la logica
-///Contiene denro al widget que representa la vista
+///ContainerViewPattern donde el widget que encapsula toda la logica (llamado Container)
+///Contiene dentro al widget que representa la vista
 class _DetailsPageContainerState extends State<DetailsPageContainer> {
   DetailsParams params;
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:como_gasto/src/providers/login_state.dart';
+import 'package:como_gasto/src/providers/login_state_provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -43,8 +43,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _body(BuildContext context) {
     return Center(
-      child: Consumer<LoginState>(
-        builder: (BuildContext context, LoginState state, Widget child) {
+      child: Consumer<LoginStateProvider>(
+        builder: (BuildContext context, LoginStateProvider state, Widget child) {
           if (state.isLoading) return CircularProgressIndicator();
 
           return child;
@@ -105,19 +105,19 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Color(0xff4285f4),
             child: Icon(FontAwesomeIcons.google),
             onPressed: () =>
-                Provider.of<LoginState>(context, listen: false).login(LoginType.GOOGLE),
+                Provider.of<LoginStateProvider>(context, listen: false).login(LoginType.GOOGLE),
           ),
           FloatingActionButton(
             backgroundColor: Color.fromRGBO(0, 172, 238, 1),
             child: Icon(FontAwesomeIcons.twitter),
             onPressed: () =>
-                Provider.of<LoginState>(context, listen: false).login(LoginType.TWITTER),
+                Provider.of<LoginStateProvider>(context, listen: false).login(LoginType.TWITTER),
           ),
           FloatingActionButton(
             backgroundColor: Color.fromRGBO(59, 89, 152, 1),
             child: Icon(FontAwesomeIcons.facebook),
             onPressed: () =>
-                Provider.of<LoginState>(context, listen: false).login(LoginType.FACEBOOK),
+                Provider.of<LoginStateProvider>(context, listen: false).login(LoginType.FACEBOOK),
           ),
         ],
       ),

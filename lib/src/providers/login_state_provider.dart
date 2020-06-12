@@ -9,7 +9,13 @@ import 'package:como_gasto/src/keys/keys.dart' as keys;
 
 enum LoginType { GOOGLE, FACEBOOK, TWITTER }
 
-class LoginState with ChangeNotifier {
+///Existen 3 pasos basicos para crear un metodo de login mediante Firebase
+///1. Obtener un usuario o sesion utilizando la libreria especifica del proveedor, como google o facebook
+///2. Verificar si el usuario le dio permisos de acceder a ese proveedor
+///3. Obtener credenciales Firebase a partir del usuario o sesion que se obtuvo
+///4. Obtener un usuario de Firebase a partir de las credenciales obtenidas. La informacion necesaria para
+///este paso depende del proveedor
+class LoginStateProvider with ChangeNotifier {
   //manejo de estado
   bool _loggedIn = false;
   bool _loading = true;
@@ -34,7 +40,7 @@ class LoginState with ChangeNotifier {
 
   FirebaseUser get currentUser => _user;
 
-  LoginState() {
+  LoginStateProvider() {
     loadLoginState();
   }
 

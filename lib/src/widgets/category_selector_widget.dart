@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:rect_getter/rect_getter.dart';
 
 import 'package:como_gasto/src/firestore/db.dart';
-import 'package:como_gasto/src/providers/login_state.dart';
 
+///Crea una barra de categorias para la pagina de AddExpensePage 
 class CategorySelectorWidget extends StatefulWidget {
   
   final Map<String, IconData> categories;
@@ -27,6 +27,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
 
     widget.categories.forEach((name, icon){
 
+      //asignar un key unico al rect del widget que se va a medir
        var globalKey = RectGetter.createGlobalKey();
 
         widgets.add(  
@@ -41,6 +42,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
             },
             onLongPress: () async {
               if(name != 'Add Category'){
+                  //obtenemos un rect para posicionar el menu
                   var rect = RectGetter.getRectFromKey(globalKey);                  
                   bool s = await showMenu<bool>(
                       context: context,
@@ -59,8 +61,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                   );
 
                 if(s != null && s){
-                  var user = Provider.of<LoginState>(context, listen: false).currentUser;
-                  deleteCategory(name, user.uid);
+                  deleteCategory(name);
                 }
               }              
                 
@@ -83,7 +84,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
     );
   }
 
-  void deleteCategory(String name, String userID){
+  void deleteCategory(String name){
     var db = Provider.of<DBRepository>(context, listen: false);
     db.deleteCategory(name);
   }

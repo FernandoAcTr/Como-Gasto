@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:como_gasto/src/firestore/db.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart' as iconUtils;
 import 'package:como_gasto/src/widgets/category_selector_widget.dart';
-import 'package:como_gasto/src/widgets/searchIconDelegate.dart';
+import 'package:como_gasto/src/widgets/search_Icon_delegate.dart';
 import 'package:provider/provider.dart';
 
 
