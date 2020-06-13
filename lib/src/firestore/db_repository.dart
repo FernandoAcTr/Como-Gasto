@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:como_gasto/src/models/expense.dart';
+
 class DBRepository {
   String _userID;
 
