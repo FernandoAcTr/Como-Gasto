@@ -9,7 +9,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:como_gasto/como_gasto_icons.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/firestore/db_repository.dart';
-import 'package:como_gasto/src/utils/icon_utils.dart';
+import 'package:como_gasto/src/utils/icon_utils.dart' as icons;
 import 'package:como_gasto/src/utils/utils.dart' as utils;
 import 'package:como_gasto/src/widgets/category_selector_widget.dart';
 
@@ -123,7 +123,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
             Map<String, IconData> categories = {};
 
             documents.forEach((doc) {
-              categories.addAll({doc['name']: materialIconList[doc['icon']]});
+              categories.addAll({doc['name']: icons.categoryIcons[doc['icon']]});
             });
 
             categories.addAll({'Add Category': Icons.add});

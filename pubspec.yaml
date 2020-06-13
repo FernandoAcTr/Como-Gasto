@@ -96,6 +96,9 @@ flutter:
      - family: ComoGastoIcons
        fonts:
          - asset: assets/fonts/ComoGastoIcons.ttf
+     - family: CategoryIcons
+       fonts:
+         - asset: assets/fonts/CategoryIcons.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

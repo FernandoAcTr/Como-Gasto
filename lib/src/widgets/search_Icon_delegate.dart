@@ -42,7 +42,7 @@ class SearchIcon extends SearchDelegate{
 
     var icons = <Widget>[];
 
-    iconUtils.materialIconList.forEach((name, icon){
+    iconUtils.categoryIcons.forEach((name, icon){
         if(name.contains(query.toLowerCase()))
           icons.add(  _iconItem(name, icon, context) );  
     });
