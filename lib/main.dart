@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:como_gasto/src/firestore/db.dart';
+import 'package:como_gasto/src/firestore/db_repository.dart';
 import 'package:como_gasto/src/providers/date_provider.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/pages/add_category_page.dart';

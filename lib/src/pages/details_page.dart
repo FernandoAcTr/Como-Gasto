@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:como_gasto/src/pages/ui/day_expense_list_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import 'package:como_gasto/src/firestore/db.dart';
+import 'package:como_gasto/src/firestore/db_repository.dart';
 
 class DetailsParams {
   final month;
@@ -26,24 +25,19 @@ class DetailsPageContainer extends StatefulWidget {
 ///ContainerViewPattern donde el widget que encapsula toda la logica (llamado Container)
 ///Contiene dentro al widget que representa la vista
 class _DetailsPageContainerState extends State<DetailsPageContainer> {
-  //Stream del query
-  Stream query;
-
   @override
   void initState() {
     super.initState();
     var db = Provider.of<DBRepository>(context, listen: false);
     var params = widget.params;
-    query =
-        db.getCategoryExpenses(params.category, params.year, params.month + 1);
+    db.getCategoryExpenses(params.category, params.year, params.month + 1);
   }
 
   @override
   Widget build(BuildContext context) {
-    var db = Provider.of<DBRepository>(context, listen: false);
-
     return StreamBuilder<QuerySnapshot>(
-        stream: query,
+        stream: Provider.of<DBRepository>(context, listen: false)
+            .categoryExpensesStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData)
             return Center(child: CircularProgressIndicator());
@@ -52,6 +46,7 @@ class _DetailsPageContainerState extends State<DetailsPageContainer> {
             categoryName: widget.params.category,
             documentList: snapshot.data.documents,
             onDelete: (String documentId) {
+              var db = Provider.of<DBRepository>(context, listen: false);
               db.deleteCategoryExpense(documentId);
             },
           );

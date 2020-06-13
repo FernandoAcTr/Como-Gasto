@@ -8,7 +8,7 @@ import 'package:local_auth/local_auth.dart';
 
 import 'package:como_gasto/como_gasto_icons.dart';
 import 'package:como_gasto/src/routes/routes.dart';
-import 'package:como_gasto/src/firestore/db.dart';
+import 'package:como_gasto/src/firestore/db_repository.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart';
 import 'package:como_gasto/src/utils/utils.dart' as utils;
 import 'package:como_gasto/src/widgets/category_selector_widget.dart';
@@ -28,9 +28,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
   DateTime date = DateTime.now();
   File _foto;
 
-  //Stream del query
-  Stream query;
-
   //local autentication
   LocalAuthentication _localAuth;
   bool _isBiometricAvailable = false;
@@ -48,7 +45,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
     });
 
     var db = Provider.of<DBRepository>(context, listen: false);
-    query = db.getCategories();
+    db.getCategories();
   }
 
   @override
@@ -118,7 +115,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
     return Container(
       height: 80.0,
       child: StreamBuilder<QuerySnapshot>(
-          stream: query,
+          stream: Provider.of<DBRepository>(context, listen: false).categoryStream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return CircularProgressIndicator();
 

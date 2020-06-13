@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-import 'package:como_gasto/src/firestore/db.dart';
+import 'package:como_gasto/src/firestore/db_repository.dart';
 import 'package:como_gasto/src/widgets/graph_widget.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart' as iconUtils;
 
@@ -59,7 +59,8 @@ class _MonthWidgetState extends State<MonthWidget> {
     super.initState();
     var db = Provider.of<DBRepository>(context, listen: false);
     widget.categories.forEach((catName, monto){
-      queries.add(db.getCategoryIcon(catName));
+      db.getCategoryIcon(catName);
+      queries.add(db.categoryIconFuture);
     });
   }
 

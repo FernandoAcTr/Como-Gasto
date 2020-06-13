@@ -9,7 +9,7 @@ import 'package:como_gasto/src/providers/date_provider.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/utils/utils.dart';
 import 'package:como_gasto/src/widgets/month_widget.dart';
-import 'package:como_gasto/src/firestore/db.dart';
+import 'package:como_gasto/src/firestore/db_repository.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,9 +21,6 @@ class _HomePageState extends State<HomePage> {
   GraphType currentGraphType = GraphType.LINES;
   DateProvider dateProvider;
 
-  //Stream del query
-  Stream query;
-
   //manejador de notificaciones
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -34,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     setupNotificationPlugin();
     var dateProvider = Provider.of<DateProvider>(context, listen: false);
     var db = Provider.of<DBRepository>(context, listen: false);
-    query = db.getExpenses(dateProvider.year, dateProvider.month + 1);
+    db.getExpenses(dateProvider.year, dateProvider.month + 1);
   }
 
   @override
@@ -113,7 +110,7 @@ class _HomePageState extends State<HomePage> {
         _yearSelector(),
         _monthSelector(),
         StreamBuilder<QuerySnapshot>(
-            stream: query,
+            stream: Provider.of<DBRepository>(context, listen:false).expensesStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data.documents.length > 0) {
@@ -176,7 +173,7 @@ class _HomePageState extends State<HomePage> {
         onPageChanged: (position) {
           dateProvider.month = position;
           var db = Provider.of<DBRepository>(context, listen: false);
-          query = db.getExpenses(dateProvider.year, dateProvider.month + 1);
+          db.getExpenses(dateProvider.year, dateProvider.month + 1);
         },
         children: <Widget>[
           _monthSelectorItem('Enero', 0),
@@ -211,7 +208,7 @@ class _HomePageState extends State<HomePage> {
           onChanged: (newYear) {
             dateProvider.year = newYear;
             var db = Provider.of<DBRepository>(context, listen: false);
-            query = db.getExpenses(dateProvider.year, dateProvider.month + 1);
+            db.getExpenses(dateProvider.year, dateProvider.month + 1);
           }),
     );
   }

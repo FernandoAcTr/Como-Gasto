@@ -9,6 +9,18 @@ class DBRepository {
 
   DBRepository(this._userID);
 
+  Stream<QuerySnapshot> _expensesStream;
+  Stream<QuerySnapshot> get expensesStream => _expensesStream;
+
+  Stream<QuerySnapshot> _categoryStream;
+  Stream<QuerySnapshot> get categoryStream => _categoryStream;
+
+  Future<QuerySnapshot> _categoryIconFuture;
+  Future<QuerySnapshot> get categoryIconFuture => _categoryIconFuture;
+
+  Stream<QuerySnapshot> _categoryExpensesStream;
+  Stream<QuerySnapshot> get categoryExpensesStream => _categoryExpensesStream;
+
   void addExpense(
       String category, double value, DateTime date, File photo) async {
     var document = Firestore.instance
@@ -52,18 +64,6 @@ class DBRepository {
     }
   }
 
-  Stream<QuerySnapshot> getExpenses(int year, int month) {
-    print("peticion getExpenses");
-
-    return Firestore.instance
-        .collection('users')
-        .document(_userID)
-        .collection('expenses')
-        .where('year', isEqualTo: year)
-        .where("month", isEqualTo: month)
-        .snapshots();
-  }
-
   void addCategory(String icon, String name) async {
     Firestore.instance
         .collection('users')
@@ -71,30 +71,6 @@ class DBRepository {
         .collection('categories')
         .document()
         .setData({'icon': icon, 'name': name});
-  }
-
-  Stream<QuerySnapshot> getCategories() {
-    print("Peticion get categories");
-
-    return Firestore.instance
-        .collection('users')
-        .document(_userID)
-        .collection('categories')
-        .snapshots();
-  }
-
-  Future<QuerySnapshot> getCategoryIcon(String categoryName) async {
-    print("Peticion getCategoryIcon");
-
-    final query = Firestore.instance
-        .collection('users')
-        .document(_userID)
-        .collection('categories')
-        .where('name', isEqualTo: categoryName)
-        .snapshots()
-        .first;
-
-    return query;
   }
 
   void deleteCategory(String name) async {
@@ -118,21 +94,6 @@ class DBRepository {
         .delete();
   }
 
-  Stream<QuerySnapshot> getCategoryExpenses(
-      String category, int year, int month) {
-
-    print("Peticion getCategoryExpenses");
-    
-    return Firestore.instance
-        .collection('users')
-        .document(_userID)
-        .collection('expenses')
-        .where('year', isEqualTo: year)
-        .where("month", isEqualTo: month)
-        .where("category", isEqualTo: category)
-        .snapshots();
-  }
-
   void deleteCategoryExpense(String expenseID) async {
     Firestore.instance
         .collection('users')
@@ -140,5 +101,52 @@ class DBRepository {
         .collection('expenses')
         .document(expenseID)
         .delete();
+  }
+
+  void getExpenses(int year, int month) {
+    print("peticion getExpenses");
+
+    _expensesStream = Firestore.instance
+        .collection('users')
+        .document(_userID)
+        .collection('expenses')
+        .where('year', isEqualTo: year)
+        .where("month", isEqualTo: month)
+        .snapshots();
+  }
+
+  void getCategories() {
+    print("Peticion get categories");
+
+    _categoryStream = Firestore.instance
+        .collection('users')
+        .document(_userID)
+        .collection('categories')
+        .snapshots();
+  }
+
+  void getCategoryIcon(String categoryName) async {
+    print("Peticion getCategoryIcon");
+
+    _categoryIconFuture = Firestore.instance
+        .collection('users')
+        .document(_userID)
+        .collection('categories')
+        .where('name', isEqualTo: categoryName)
+        .snapshots()
+        .first;
+  }
+
+  void getCategoryExpenses(String category, int year, int month) {
+    print("Peticion getCategoryExpenses");
+
+    _categoryExpensesStream = Firestore.instance
+        .collection('users')
+        .document(_userID)
+        .collection('expenses')
+        .where('year', isEqualTo: year)
+        .where("month", isEqualTo: month)
+        .where("category", isEqualTo: category)
+        .snapshots();
   }
 }

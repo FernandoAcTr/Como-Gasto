@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rect_getter/rect_getter.dart';
 
-import 'package:como_gasto/src/firestore/db.dart';
+import 'package:como_gasto/src/firestore/db_repository.dart';
 
 ///Crea una barra de categorias para la pagina de AddExpensePage 
 class CategorySelectorWidget extends StatefulWidget {
