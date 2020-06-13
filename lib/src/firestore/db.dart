@@ -9,8 +9,8 @@ class DBRepository {
 
   DBRepository(this._userID);
 
-  void addExpense(String category, double value, DateTime date, File photo) async {
-
+  void addExpense(
+      String category, double value, DateTime date, File photo) async {
     var document = Firestore.instance
         .collection('users')
         .document(_userID)
@@ -27,9 +27,11 @@ class DBRepository {
     if (photo != null) {
       var imageName = Uuid().v1();
       var imagePath = '/users/$_userID/$imageName.jpg';
-      var resizedImagePath = '/users/$_userID/${imageName}_200x200.jpg'; //el path que genera automaticamente firebase Storage
+      var resizedImagePath =
+          '/users/$_userID/${imageName}_200x200.jpg'; //el path que genera automaticamente firebase Storage
 
-      final StorageReference storageReference = FirebaseStorage().ref().child(imagePath);
+      final StorageReference storageReference =
+          FirebaseStorage().ref().child(imagePath);
       final StorageUploadTask uploadTask = storageReference.putFile(photo);
 
       final StreamSubscription<StorageTaskEvent> streamSubscription =
@@ -51,6 +53,8 @@ class DBRepository {
   }
 
   Stream<QuerySnapshot> getExpenses(int year, int month) {
+    print("peticion getExpenses");
+
     return Firestore.instance
         .collection('users')
         .document(_userID)
@@ -70,6 +74,8 @@ class DBRepository {
   }
 
   Stream<QuerySnapshot> getCategories() {
+    print("Peticion get categories");
+
     return Firestore.instance
         .collection('users')
         .document(_userID)
@@ -78,6 +84,8 @@ class DBRepository {
   }
 
   Future<QuerySnapshot> getCategoryIcon(String categoryName) async {
+    print("Peticion getCategoryIcon");
+
     final query = Firestore.instance
         .collection('users')
         .document(_userID)
@@ -112,6 +120,9 @@ class DBRepository {
 
   Stream<QuerySnapshot> getCategoryExpenses(
       String category, int year, int month) {
+
+    print("Peticion getCategoryExpenses");
+    
     return Firestore.instance
         .collection('users')
         .document(_userID)

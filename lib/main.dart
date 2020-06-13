@@ -58,9 +58,14 @@ class MyApp extends StatelessWidget {
               },
               Routes.addExpensePage: (context) => AddExpensePage(),
               Routes.addCategoryPage: (context) => AddCategoryPage(),
-              Routes.detailsPage: (context) => DetailsPageContainer(),
               Routes.settingsPage: (context) => SettingsPage(),
             },
+            onGenerateRoute: (settings){
+              return MaterialPageRoute(
+                builder: (context) => DetailsPageContainer(settings.arguments)
+              );
+            },
+
           );
         },
       ),

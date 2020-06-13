@@ -28,6 +28,9 @@ class _AddExpensePageState extends State<AddExpensePage> {
   DateTime date = DateTime.now();
   File _foto;
 
+  //Stream del query
+  Stream query;
+
   //local autentication
   LocalAuthentication _localAuth;
   bool _isBiometricAvailable = false;
@@ -43,6 +46,9 @@ class _AddExpensePageState extends State<AddExpensePage> {
         _isBiometricAvailable = b;
       });
     });
+
+    var db = Provider.of<DBRepository>(context, listen: false);
+    query = db.getCategories();
   }
 
   @override
@@ -108,12 +114,11 @@ class _AddExpensePageState extends State<AddExpensePage> {
   }
 
   Widget _categorySelector() {
-    var db = Provider.of<DBRepository>(context, listen: false);
 
     return Container(
       height: 80.0,
       child: StreamBuilder<QuerySnapshot>(
-          stream: db.getCategories(),
+          stream: query,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return CircularProgressIndicator();
 

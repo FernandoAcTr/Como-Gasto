@@ -51,9 +51,20 @@ class MonthWidget extends StatefulWidget {
 }
 
 class _MonthWidgetState extends State<MonthWidget> {
+
+  List<Future<QuerySnapshot>> queries = new List();
+  
+  @override
+  void initState() { 
+    super.initState();
+    var db = Provider.of<DBRepository>(context, listen: false);
+    widget.categories.forEach((catName, monto){
+      queries.add(db.getCategoryIcon(catName));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(widget.categories);
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -106,8 +117,6 @@ class _MonthWidgetState extends State<MonthWidget> {
    }
 
    Widget _list(){
-     var db = Provider.of<DBRepository>(context, listen: false);
-
       return Expanded(
         child: ListView.separated(            
           itemBuilder: (BuildContext context, int index) {
@@ -116,7 +125,7 @@ class _MonthWidgetState extends State<MonthWidget> {
             double percent = 100 * catTotal / widget.total;
 
             return FutureBuilder(
-              future: db.getCategoryIcon(catName),
+              future: queries[index],
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
                   if(snapshot.hasData){
 
