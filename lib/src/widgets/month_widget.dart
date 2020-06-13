@@ -122,7 +122,7 @@ class _MonthWidgetState extends State<MonthWidget> {
 
                     if(snapshot.data.documents.length > 0){
                       var iconName = snapshot.data.documents.first['icon'];
-                      return _listItem(iconUtils.iconList[iconName], catName,catTotal,percent.toStringAsFixed(2));
+                      return _listItem(iconUtils.materialIconList[iconName], catName,catTotal,percent.toStringAsFixed(2));
                     }else
                       return _listItem(Icons.broken_image, catName,catTotal,percent.toStringAsFixed(2));
                   }

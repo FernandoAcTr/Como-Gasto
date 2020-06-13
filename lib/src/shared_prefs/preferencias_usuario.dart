@@ -16,8 +16,8 @@ class PreferenciasUsuario {
     this._prefs = await SharedPreferences.getInstance();
   }
   
-  void clear(){
-    _prefs.clear();
+  Future<void> clear() async {
+    await _prefs.clear();
   }
 
   // GET y SET del loggedInd

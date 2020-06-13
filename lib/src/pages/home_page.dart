@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
+import 'package:como_gasto/como_gasto_icons.dart';
 import 'package:como_gasto/src/providers/date_provider.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/utils/utils.dart';
 import 'package:como_gasto/src/widgets/month_widget.dart';
 import 'package:como_gasto/src/firestore/db.dart';
-import 'package:como_gasto/src/providers/login_state_provider.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -71,19 +70,19 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-                _iconButton(FontAwesomeIcons.history, (){
+                _iconButton(ComoGastoIcons.stats_bars, (){
                   setState(() {
                     currentGraphType = GraphType.LINES;
                   });
                 }),
-                _iconButton(FontAwesomeIcons.chartPie, (){
+                _iconButton(ComoGastoIcons.pie_chart, (){
                   setState(() {
                     currentGraphType = GraphType.PIE;
                   });
                 }),
                 SizedBox(width: 48.0),
-                _iconButton(FontAwesomeIcons.wallet, (){}),
-                _iconButton(Icons.settings, (){
+                _iconButton(ComoGastoIcons.cart, (){}),
+                _iconButton(ComoGastoIcons.settings, (){
                     Navigator.of(context).pushNamed(Routes.settingsPage);
                 }),
             ],
@@ -97,7 +96,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: (){
           Navigator.of(context).pushNamed(Routes.addExpensePage);
         },
-        child: Icon(Icons.add)
+        child: Icon(ComoGastoIcons.plus)
       );
   }
 

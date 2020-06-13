@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Map<String, IconData> get iconList {
+Map<String, IconData> get materialIconList {
   return {
     'ac_unit': Icons.ac_unit,
     'access_alarm': Icons.access_alarm,

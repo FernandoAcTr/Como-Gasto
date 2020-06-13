@@ -72,7 +72,7 @@ class _AddCategoryState extends State<AddCategoryPage> {
 
   Widget _previewIcon(){
     return CategoryItemWidget(
-      icon: iconUtils.iconList[currentIcon],
+      icon: iconUtils.materialIconList[currentIcon],
       name: categoryName,
       selected: true,
     );
@@ -81,7 +81,7 @@ class _AddCategoryState extends State<AddCategoryPage> {
   Widget _listIcons(){
     final widgets = <Widget>[];
 
-    iconUtils.iconList.forEach((name, icon){
+    iconUtils.materialIconList.forEach((name, icon){
       widgets.add(
         _iconItem(name, icon)
       );

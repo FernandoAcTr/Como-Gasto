@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 
 class ThemeStateProvider with ChangeNotifier {
 
-  bool _isDarkEnable;
+  // bool _isDarkEnable;
   PreferenciasUsuario _prefs = new PreferenciasUsuario();
 
   ThemeStateProvider(){
-    _isDarkEnable = _prefs.darkMode;
+    // _isDarkEnable = _prefs.darkMode;
   }
 
   ThemeData get currentTheme =>
-      _isDarkEnable ? ThemeData.dark().copyWith(
+      isDarkModeEnable ? ThemeData.dark().copyWith(
         accentColor: Colors.white,
         primaryColor: Colors.red,
         buttonTheme: ButtonThemeData(
@@ -26,10 +26,10 @@ class ThemeStateProvider with ChangeNotifier {
       ) : ThemeData.light();
 
   set darkMode(bool enable) {
-    _isDarkEnable = enable;
-    _prefs.darkMode = _isDarkEnable;
+    // _isDarkEnable = enable;
+    _prefs.darkMode = enable;
     notifyListeners();
   }
 
-  get isDarkModeEnable => _isDarkEnable;
+  get isDarkModeEnable => _prefs.darkMode;
 }

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
 
+import 'package:como_gasto/como_gasto_icons.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/firestore/db.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart';
@@ -63,7 +64,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
         backgroundColor: Colors.transparent,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.calendar_today),
+            icon: Icon(ComoGastoIcons.calendar),
             color: Colors.grey,
             onPressed: () {
               showDatePicker(
@@ -84,7 +85,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.camera_alt),
+            icon: Icon(ComoGastoIcons.camera),
             color: Colors.grey,
             onPressed: () => _procesarImagen(ImageSource.camera),
           ),
@@ -120,7 +121,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
             Map<String, IconData> categories = {};
 
             documents.forEach((doc) {
-              categories.addAll({doc['name']: iconList[doc['icon']]});
+              categories.addAll({doc['name']: materialIconList[doc['icon']]});
             });
 
             categories.addAll({'Add Category': Icons.add});

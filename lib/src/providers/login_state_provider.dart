@@ -75,12 +75,12 @@ class LoginStateProvider with ChangeNotifier {
   }
 
   void logout() async {
-    _prefs.clear();
+    await _prefs.clear();
 
     if (await _googleSignIn.isSignedIn()) _googleSignIn.signOut();
     else if(await _facebookLogin.isLoggedIn) _facebookLogin.logOut();
     // else if (await _twitterLogin.isSessionActive) _twitterLogin.logOut();
-    _auth.signOut();
+    await _auth.signOut();
 
     _loggedIn = false;
     notifyListeners();

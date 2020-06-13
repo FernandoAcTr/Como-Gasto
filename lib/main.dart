@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Como Gasto',
             initialRoute: Routes.homePage,
+            theme: themeState.currentTheme,
             routes: {
               Routes.homePage: (context) {
                 var state = Provider.of<LoginStateProvider>(context);
@@ -60,7 +61,6 @@ class MyApp extends StatelessWidget {
               Routes.detailsPage: (context) => DetailsPageContainer(),
               Routes.settingsPage: (context) => SettingsPage(),
             },
-            theme: themeState.currentTheme,
           );
         },
       ),
