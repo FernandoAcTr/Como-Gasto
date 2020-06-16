@@ -19,12 +19,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   PageController _controller;
   GraphType currentGraphType = GraphType.LINES;
-  DateProvider dateProvider;
 
   //manejador de notificaciones
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  //Providers
+  DateProvider dateProvider;
+  
   @override
   void initState() {
     super.initState();
@@ -110,10 +112,12 @@ class _HomePageState extends State<HomePage> {
         _yearSelector(),
         _monthSelector(),
         StreamBuilder<QuerySnapshot>(
-            stream: Provider.of<DBRepository>(context, listen:false).expensesStream,
+            stream: Provider.of<DBRepository>(context).expensesStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data.documents.length > 0) {
+                   print('Numero de documentos: ${snapshot.data.documents.length}');
+
                   return MonthWidget(
                       days: daysInMonth(dateProvider.month + 1),
                       graphType: currentGraphType,

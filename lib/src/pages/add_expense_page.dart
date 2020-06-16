@@ -289,10 +289,10 @@ class _AddExpensePageState extends State<AddExpensePage> {
 
     if (realValue > 0 && category != '') {
       if (_isBiometricAvailable) {
-        if (await authenticate())
+        // if (await authenticate())
           _saveAndBack(db);
-        else
-          utils.mostrarSnackbar(scaffoldKey, 'Please identify by yourself');
+        // else
+          // utils.mostrarSnackbar(scaffoldKey, 'Please identify by yourself');
       } else
         _saveAndBack(db);
     } else
