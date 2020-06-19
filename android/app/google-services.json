@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "990364696935-mmv17scl8hape7jfs65oced785bvsc41.apps.googleusercontent.com",
+          "client_id": "990364696935-ianpgmmsbahm95ogd2n0p6omcbutp8mq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fernando.como_gasto",
-            "certificate_hash": "27d6d8f991ef8b6193fd80bf2c0bf154253c8cb7"
+            "certificate_hash": "ebfd8def40621258cd254598210c7811feb004db"
           }
         },
         {
