@@ -17,9 +17,6 @@ class DBRepository {
   Stream<QuerySnapshot> _categoryStream;
   Stream<QuerySnapshot> get categoryStream => _categoryStream;
 
-  Future<QuerySnapshot> _categoryIconFuture;
-  Future<QuerySnapshot> get categoryIconFuture => _categoryIconFuture;
-
   Stream<QuerySnapshot> _categoryExpensesStream;
   Stream<QuerySnapshot> get categoryExpensesStream => _categoryExpensesStream;
 
@@ -127,10 +124,10 @@ class DBRepository {
         .snapshots();
   }
 
-  void getCategoryIcon(String categoryName) async {
+  Future<QuerySnapshot> getCategoryIcon(String categoryName) async {
     print("Peticion getCategoryIcon");
 
-    _categoryIconFuture = Firestore.instance
+    return Firestore.instance
         .collection('users')
         .document(_userID)
         .collection('categories')

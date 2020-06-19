@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
 
   //Providers
   DateProvider dateProvider;
-  
+
   @override
   void initState() {
     super.initState();
@@ -116,12 +116,12 @@ class _HomePageState extends State<HomePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data.documents.length > 0) {
-                   print('Numero de documentos: ${snapshot.data.documents.length}');
-
                   return MonthWidget(
-                      days: daysInMonth(dateProvider.month + 1),
-                      graphType: currentGraphType,
-                      documents: snapshot.data.documents);
+                    days: daysInMonth(dateProvider.month + 1),
+                    graphType: currentGraphType,
+                    documents: snapshot.data.documents,
+                    db: Provider.of<DBRepository>(context),
+                  );
                 } else {
                   return Expanded(
                     child: Column(

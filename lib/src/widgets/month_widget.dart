@@ -9,20 +9,23 @@ import 'package:como_gasto/src/firestore/db_repository.dart';
 import 'package:como_gasto/src/widgets/graph_widget.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart' as iconUtils;
 
+import '../firestore/db_repository.dart';
+
 enum GraphType {
   LINES,
   PIE
 }
 
-class MonthWidget extends StatefulWidget {
+class MonthWidget extends StatelessWidget {
 
   final List<DocumentSnapshot> documents;
   final double total;
   final List<double> perDay; 
   final Map<String, double> categories;
   final graphType; 
+  final DBRepository db;
 
-  MonthWidget({Key key, this.graphType, this.documents, days}) : 
+  MonthWidget({Key key, @required this.db, this.graphType, this.documents, days}) : 
     //se suma el value de todos los documentos
     total = documents.map((doc) => doc['value'])
                      .fold(0.0, (a,b) => a+b),
@@ -46,43 +49,28 @@ class MonthWidget extends StatefulWidget {
     }),
     super(key: key);
 
-  @override
-  _MonthWidgetState createState() => _MonthWidgetState();
-}
-
-class _MonthWidgetState extends State<MonthWidget> {
-
-  List<Future<QuerySnapshot>> queries = new List();
-  
-  @override
-  void initState() { 
-    super.initState();
-    var db = Provider.of<DBRepository>(context, listen: false);
-    widget.categories.forEach((catName, monto){
-      db.getCategoryIcon(catName);
-      queries.add(db.categoryIconFuture);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    // _getIcons();
+
     return Expanded(
       child: Column(
         children: <Widget>[
           _expenses(),
           _graph(),
           _divider(16.0),
-          _list()
+          _list(context)
         ],
       ),
     );
-  } 
+  }
 
    Widget _expenses(){
      return Column(
        children: <Widget>[
         Text(
-            '\$${widget.total.toStringAsFixed(2)}', 
+            '\$${total.toStringAsFixed(2)}', 
             style: TextStyle(
               fontSize: 40.0,
               fontWeight: FontWeight.bold
@@ -102,14 +90,14 @@ class _MonthWidgetState extends State<MonthWidget> {
 
    Widget _graph(){
 
-     if(widget.graphType == GraphType.LINES){
+     if(graphType == GraphType.LINES){
         return Container(
           height: 220.0,
-          child: LinesGraphWidget(data: widget.perDay)
+          child: LinesGraphWidget(data: perDay)
         );
      }
       else{
-        var perCategory = widget.categories.keys.map((name) => widget.categories[name] / widget.total).toList();
+        var perCategory = categories.keys.map((name) => categories[name] / total).toList();
         return Container(
           height: 220.0,
           child: PieGraphWidget(data: perCategory)
@@ -117,32 +105,32 @@ class _MonthWidgetState extends State<MonthWidget> {
       }    
    }
 
-   Widget _list(){
+   Widget _list(BuildContext context){
       return Expanded(
         child: ListView.separated(            
           itemBuilder: (BuildContext context, int index) {
-            var catName = widget.categories.keys.elementAt(index);
-            var catTotal = widget.categories[catName];
-            double percent = 100 * catTotal / widget.total;
+            var catName = categories.keys.elementAt(index);
+            var catTotal = categories[catName];
+            double percent = 100 * catTotal / total;
 
             return FutureBuilder(
-              future: queries[index],
+              future: db.getCategoryIcon(catName),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
                   if(snapshot.hasData){
 
                     if(snapshot.data.documents.length > 0){
                       var iconName = snapshot.data.documents.first['icon'];
-                      return _listItem(iconUtils.categoryIcons[iconName], catName,catTotal,percent.toStringAsFixed(2));
+                      return _listItem(iconUtils.categoryIcons[iconName], catName,catTotal,percent.toStringAsFixed(2), context);
                     }else
-                      return _listItem(Icons.broken_image, catName,catTotal,percent.toStringAsFixed(2));
+                      return _listItem(Icons.broken_image, catName,catTotal,percent.toStringAsFixed(2), context);
                   }
-                  return _listItem(null, catName,catTotal,percent.toStringAsFixed(2));
+                  return _listItem(null, catName,catTotal,percent.toStringAsFixed(2), context);
               },
             );
 
           },
           separatorBuilder: (context, index) => _divider(3.0), 
-          itemCount: widget.categories.keys.length,          
+          itemCount: categories.keys.length,          
         ),
       );
    }
@@ -154,7 +142,7 @@ class _MonthWidgetState extends State<MonthWidget> {
      );
    }
 
-   ListTile _listItem(IconData icon, String name, double total, String percent){
+   ListTile _listItem(IconData icon, String name, double total, String percent, BuildContext context){
      return ListTile(       
        leading: icon == null ? CircularProgressIndicator() : Icon(icon, size: 35.0,),
        title: Text(name,
@@ -194,3 +182,4 @@ class _MonthWidgetState extends State<MonthWidget> {
    }
 
 }
+
