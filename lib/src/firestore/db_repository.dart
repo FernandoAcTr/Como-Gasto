@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:como_gasto/src/models/expense.dart';
-
 import '../models/expense.dart';
+export '../models/expense.dart';
+
+import '../models/category.dart';
+export '../models/category.dart';
 
 class DBRepository {
   String _userID;
@@ -16,8 +18,8 @@ class DBRepository {
   Stream<List<Expense>> _expensesStream;
   Stream<List<Expense>> get expensesStream => _expensesStream;
 
-  Stream<QuerySnapshot> _categoryStream;
-  Stream<QuerySnapshot> get categoryStream => _categoryStream;
+  Stream<List<Category>> _categoryStream;
+  Stream<List<Category>> get categoryStream => _categoryStream;
 
   Stream<QuerySnapshot> _categoryExpensesStream;
   Stream<QuerySnapshot> get categoryExpensesStream => _categoryExpensesStream;
@@ -58,13 +60,13 @@ class DBRepository {
     }
   }
 
-  void addCategory(String icon, String name) async {
+  void addCategory(Category category) async {
     Firestore.instance
         .collection('users')
         .document(_userID)
         .collection('categories')
         .document()
-        .setData({'icon': icon, 'name': name});
+        .setData(category.toMap());
   }
 
   void deleteCategory(String name) async {
@@ -119,7 +121,10 @@ class DBRepository {
         .collection('users')
         .document(_userID)
         .collection('categories')
-        .snapshots();
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.documents
+            .map((document) => Category.fromMap(document.data))
+            .toList());
   }
 
   Future<QuerySnapshot> getCategoryIcon(String categoryName) async {

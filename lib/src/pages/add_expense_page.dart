@@ -9,11 +9,10 @@ import 'package:local_auth/local_auth.dart';
 import 'package:como_gasto/como_gasto_icons.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:como_gasto/src/firestore/db_repository.dart';
-import 'package:como_gasto/src/utils/icon_utils.dart' as icons;
 import 'package:como_gasto/src/utils/utils.dart' as utils;
 import 'package:como_gasto/src/widgets/category_selector_widget.dart';
 
-import '../models/expense.dart';
+import '../firestore/db_repository.dart';
 
 class AddExpensePage extends StatefulWidget {
   @override
@@ -116,19 +115,16 @@ class _AddExpensePageState extends State<AddExpensePage> {
 
     return Container(
       height: 80.0,
-      child: StreamBuilder<QuerySnapshot>(
+      child: StreamBuilder<List<Category>>(
           stream: Provider.of<DBRepository>(context, listen: false).categoryStream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return CircularProgressIndicator();
 
-            final documents = snapshot.data.documents;
-            Map<String, IconData> categories = {};
-
-            documents.forEach((doc) {
-              categories.addAll({doc['name']: icons.categoryIcons[doc['icon']]});
-            });
-
-            categories.addAll({'Add Category': Icons.add});
+            final categories = snapshot.data;
+            categories.add(Category(
+              name: 'Add Category',
+              icon: 'hospital'
+            ));
 
             return CategorySelectorWidget(
               categories: categories,

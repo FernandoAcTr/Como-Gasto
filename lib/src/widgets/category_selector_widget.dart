@@ -4,11 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:rect_getter/rect_getter.dart';
 
 import 'package:como_gasto/src/firestore/db_repository.dart';
+import 'package:como_gasto/src/utils/icon_utils.dart' as icons;
+
 
 ///Crea una barra de categorias para la pagina de AddExpensePage 
 class CategorySelectorWidget extends StatefulWidget {
   
-  final Map<String, IconData> categories;
+  final List<Category> categories;
   final Function(String) onValueChanged;
 
   const CategorySelectorWidget({Key key, this.categories, this.onValueChanged}) : super(key: key);
@@ -25,7 +27,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
   Widget build(BuildContext context) {
     var widgets = <Widget>[];
 
-    widget.categories.forEach((name, icon){
+    widget.categories.forEach((category){
 
       //asignar un key unico al rect del widget que se va a medir
        var globalKey = RectGetter.createGlobalKey();
@@ -34,14 +36,14 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
 
           GestureDetector(
             onTap: () {
-              if(name != 'Add Category')
+              if(category.name != 'Add Category')
                 setState(() {
-                    currenItem = name;
+                    currenItem = category.name;
                 });
-              widget.onValueChanged(name);
+              widget.onValueChanged(category.name);
             },
             onLongPress: () async {
-              if(name != 'Add Category'){
+              if(category.name != 'Add Category'){
                   //obtenemos un rect para posicionar el menu
                   var rect = RectGetter.getRectFromKey(globalKey);                  
                   bool s = await showMenu<bool>(
@@ -61,7 +63,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                   );
 
                 if(s != null && s){
-                  deleteCategory(name);
+                  deleteCategory(category.name);
                 }
               }              
                 
@@ -69,9 +71,9 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
             child: RectGetter(
               key: globalKey,
               child: CategoryItemWidget(
-                  name: name,
-                  icon: icon,
-                  selected: name == currenItem,
+                  name: category.name,
+                  icon: icons.categoryIcons[category.icon],
+                  selected: category.name == currenItem,
               ),
             ),
           ),

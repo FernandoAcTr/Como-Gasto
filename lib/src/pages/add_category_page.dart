@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:como_gasto/src/firestore/db_repository.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart' as iconUtils;
 import 'package:como_gasto/src/widgets/category_selector_widget.dart';
 import 'package:como_gasto/src/widgets/search_Icon_delegate.dart';
-import 'package:provider/provider.dart';
 
 class AddCategoryPage extends StatefulWidget {
   @override
@@ -128,7 +129,10 @@ class _AddCategoryState extends State<AddCategoryPage> {
         ),
         color: Colors.blueAccent,
         onPressed: () {
-          db.addCategory(currentIcon, categoryName);
+          db.addCategory(Category(
+            icon: currentIcon,
+            name: categoryName
+          ));
           Navigator.of(context).pop();
         },
       ),
