@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 import 'package:como_gasto/src/firestore/db_repository.dart';
 
+import '../models/expense.dart';
+
 class DetailsParams {
   final month;
   final year;
@@ -35,7 +37,7 @@ class _DetailsPageContainerState extends State<DetailsPageContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<List<Expense>>(
         stream: Provider.of<DBRepository>(context, listen: false)
             .categoryExpensesStream,
         builder: (context, snapshot) {
@@ -44,7 +46,7 @@ class _DetailsPageContainerState extends State<DetailsPageContainer> {
 
           return _DetailsPage(
             categoryName: widget.params.category,
-            documentList: snapshot.data.documents,
+            expensesList: snapshot.data,
             onDelete: (String documentId) {
               var db = Provider.of<DBRepository>(context, listen: false);
               db.deleteCategoryExpense(documentId);
@@ -56,11 +58,11 @@ class _DetailsPageContainerState extends State<DetailsPageContainer> {
 
 class _DetailsPage extends StatelessWidget {
   final String categoryName;
-  final List<DocumentSnapshot> documentList;
+  final List<Expense> expensesList;
   final Function(String) onDelete;
 
   const _DetailsPage(
-      {Key key, this.categoryName, this.documentList, this.onDelete})
+      {Key key, this.categoryName, this.expensesList, this.onDelete})
       : super(key: key);
 
   @override
@@ -72,17 +74,17 @@ class _DetailsPage extends StatelessWidget {
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
-          var document = documentList[index];
+          var expense = expensesList[index];
           return Dismissible(
             key: UniqueKey(),
-            child: DayExpenseListTile(document: document),
+            child: DayExpenseListTile(expense: expense),
             background: Container(color: Colors.red),
             onDismissed: (direction) {
-              onDelete(document.documentID);
+              onDelete(expense.expenseID);
             },
           );
         },
-        itemCount: documentList.length,
+        itemCount: expensesList.length,
       ),
     );
   }

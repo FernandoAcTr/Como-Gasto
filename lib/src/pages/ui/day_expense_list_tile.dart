@@ -1,14 +1,16 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/expense.dart';
+
 ///ListTile utilizado en DetailsPage para mostrar cada uno de los gastos
 ///
 class DayExpenseListTile extends StatelessWidget {
-  final document;
+  final Expense expense;
 
   const DayExpenseListTile({
     Key key,
-    this.document,
+    this.expense,
   }) : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class DayExpenseListTile extends StatelessWidget {
           ),
           Positioned(
             child: Text(
-              document['day'].toString(),
+              expense.day.toString(),
               textAlign: TextAlign.center,
             ),
             left: 0.0,
@@ -34,7 +36,7 @@ class DayExpenseListTile extends StatelessWidget {
       title: Container(
         child: Padding(
           child: Text(
-            '${document['value']}',
+            '${expense.value}',
             style: TextStyle(
               fontSize: 16.0,
               color: Colors.blueAccent,
@@ -48,10 +50,10 @@ class DayExpenseListTile extends StatelessWidget {
           color: Colors.blueAccent.withOpacity(0.2),
         ),
       ),
-      subtitle: document['imagePath'] == null
+      subtitle: expense.imagePath == null
           ? null
           : FutureBuilder<String>(
-              future: _getDownloadURL(document['imagePath']),
+              future: _getDownloadURL(expense.imagePath),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData){
                   print('Snapshot: ' + snapshot.data);

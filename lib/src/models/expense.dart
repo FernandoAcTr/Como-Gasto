@@ -12,13 +12,36 @@ class Expense {
         @required this.month,
         @required this.year,
         @required this.value,
+        this.expenseID,
+        this.imagePath,
     });
+
+    Expense copyWith({
+        String category,
+        int day,
+        int month,
+        int year,
+        double value,
+        String expenseId,
+        String imagePath,
+    }) => 
+        Expense(
+            category: category ?? this.category,
+            day: day ?? this.day,
+            month: month ?? this.month,
+            year: year ?? this.year,
+            value: value ?? this.value,
+            expenseID: expenseId ?? this.expenseID,
+            imagePath: imagePath ?? this.imagePath,
+        );
 
     final String category;
     final int day;
     final int month;
     final int year;
     final double value;
+    final String expenseID;
+    final String imagePath;
 
     factory Expense.fromJson(String str) => Expense.fromMap(json.decode(str));
 

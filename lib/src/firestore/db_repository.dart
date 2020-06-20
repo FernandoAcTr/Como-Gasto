@@ -21,8 +21,8 @@ class DBRepository {
   Stream<List<Category>> _categoryStream;
   Stream<List<Category>> get categoryStream => _categoryStream;
 
-  Stream<QuerySnapshot> _categoryExpensesStream;
-  Stream<QuerySnapshot> get categoryExpensesStream => _categoryExpensesStream;
+  Stream<List<Expense>> _categoryExpensesStream;
+  Stream<List<Expense>> get categoryExpensesStream => _categoryExpensesStream;
 
   void addExpense(Expense expense, File photo) async {
     var document = Firestore.instance
@@ -154,6 +154,12 @@ class DBRepository {
         .where('year', isEqualTo: year)
         .where("month", isEqualTo: month)
         .where("category", isEqualTo: category)
-        .snapshots();
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.documents.map((document) {
+              return Expense.fromMap(document.data).copyWith(
+                expenseId: document.documentID,
+                imagePath: document['imagePath'],
+              );
+            }).toList());
   }
 }
