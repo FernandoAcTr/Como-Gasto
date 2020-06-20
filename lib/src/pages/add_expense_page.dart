@@ -13,6 +13,8 @@ import 'package:como_gasto/src/utils/icon_utils.dart' as icons;
 import 'package:como_gasto/src/utils/utils.dart' as utils;
 import 'package:como_gasto/src/widgets/category_selector_widget.dart';
 
+import '../models/expense.dart';
+
 class AddExpensePage extends StatefulWidget {
   @override
   _AddExpensePageState createState() => _AddExpensePageState();
@@ -300,7 +302,14 @@ class _AddExpensePageState extends State<AddExpensePage> {
   }
 
   void _saveAndBack(DBRepository db) {
-    db.addExpense(category, realValue, date, _foto);
+    db.addExpense(Expense(
+      category: category,
+      value: realValue,
+      month: date.month,
+      year: date.year,
+      day: date.day
+    ), _foto);
+
     Navigator.of(context).pop();
   }
 

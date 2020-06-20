@@ -10,6 +10,7 @@ import 'package:como_gasto/src/widgets/graph_widget.dart';
 import 'package:como_gasto/src/utils/icon_utils.dart' as iconUtils;
 
 import '../firestore/db_repository.dart';
+import '../models/expense.dart';
 
 enum GraphType {
   LINES,
@@ -18,33 +19,33 @@ enum GraphType {
 
 class MonthWidget extends StatelessWidget {
 
-  final List<DocumentSnapshot> documents;
+  final List<Expense> expensesList;
   final double total;
   final List<double> perDay; 
   final Map<String, double> categories;
   final graphType; 
   final DBRepository db;
 
-  MonthWidget({Key key, @required this.db, this.graphType, this.documents, days}) : 
+  MonthWidget({Key key, @required this.db, this.graphType, this.expensesList, days}) : 
     //se suma el value de todos los documentos
-    total = documents.map((doc) => doc['value'])
+    total = expensesList.map((expense) => expense.value)
                      .fold(0.0, (a,b) => a+b),
 
     perDay = List.generate(days, (index){
       //se filtran todos los documentos que corespondan al dia 
       //del widget y se suman los valores del gasto
-      return documents.where((doc) => doc['day'] == (index+1))
-                      .map((doc) => doc['value'])
+      return expensesList.where((expense) => expense.day == (index+1))
+                      .map((expense) => expense.value)
                       .fold(0.0, (a,b) => a+b);
     }),
 
-    categories = documents.fold({}, (Map<String, double> map, document){
+    categories = expensesList.fold({}, (Map<String, double> map, expense){
       //si en el mapa no existe la categoria, se crea su llave con valor de 0
-      if(!map.containsKey(document['category'])){
-        map[document['category']] = 0.0;
+      if(!map.containsKey(expense.category)){
+        map[expense.category] = 0.0;
        }
 
-      map[document['category']] += document['value'];
+      map[expense.category] += expense.value;
       return map;
     }),
     super(key: key);
@@ -151,7 +152,7 @@ class MonthWidget extends StatelessWidget {
             fontSize: 20.0,
           ),
        ),
-       subtitle: Text('$percent\% of expenses',
+       subtitle: Text('$percent\% of expensesList',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16.0,

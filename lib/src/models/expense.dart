@@ -1,16 +1,42 @@
+// To parse this JSON data, do
+//
+//     final Expense = ExpenseFromMap(jsonString);
+
+import 'package:meta/meta.dart';
+import 'dart:convert';
+
 class Expense {
-  final _category;
-  final _day;
-  final _month; 
-  final _year; 
-  final _value;
+    Expense({
+        @required this.category,
+        @required this.day,
+        @required this.month,
+        @required this.year,
+        @required this.value,
+    });
 
-  Expense(this._category, this._day, this._month, this._year, this._value);
+    final String category;
+    final int day;
+    final int month;
+    final int year;
+    final double value;
 
-  get category => _category;
-  get day => _day;
-  get month => _month;
-  get year => _year;
-  get value => _value;
-  
+    factory Expense.fromJson(String str) => Expense.fromMap(json.decode(str));
+
+    String toJson() => json.encode(toMap());
+
+    factory Expense.fromMap(Map<String, dynamic> json) => Expense(
+        category: json["category"],
+        day: json["day"],
+        month: json["month"],
+        year: json["year"],
+        value: json["value"].toDouble(),
+    );
+
+    Map<String, dynamic> toMap() => {
+        "category": category,
+        "day": day,
+        "month": month,
+        "year": year,
+        "value": value,
+    };
 }

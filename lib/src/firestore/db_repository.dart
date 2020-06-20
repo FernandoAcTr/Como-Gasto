@@ -6,13 +6,15 @@ import 'package:uuid/uuid.dart';
 
 import 'package:como_gasto/src/models/expense.dart';
 
+import '../models/expense.dart';
+
 class DBRepository {
   String _userID;
 
   DBRepository(this._userID);
 
-  Stream<QuerySnapshot> _expensesStream;
-  Stream<QuerySnapshot> get expensesStream => _expensesStream;
+  Stream<List<Expense>> _expensesStream;
+  Stream<List<Expense>> get expensesStream => _expensesStream;
 
   Stream<QuerySnapshot> _categoryStream;
   Stream<QuerySnapshot> get categoryStream => _categoryStream;
@@ -20,20 +22,13 @@ class DBRepository {
   Stream<QuerySnapshot> _categoryExpensesStream;
   Stream<QuerySnapshot> get categoryExpensesStream => _categoryExpensesStream;
 
-  void addExpense(
-      String category, double value, DateTime date, File photo) async {
+  void addExpense(Expense expense, File photo) async {
     var document = Firestore.instance
         .collection('users')
         .document(_userID)
         .collection('expenses')
         .document();
-    await document.setData({
-      'category': category,
-      'value': value,
-      'month': date.month,
-      'day': date.day,
-      'year': date.year
-    });
+    await document.setData(expense.toMap());
 
     if (photo != null) {
       var imageName = Uuid().v1();
@@ -111,7 +106,10 @@ class DBRepository {
         .collection('expenses')
         .where('year', isEqualTo: year)
         .where("month", isEqualTo: month)
-        .snapshots();
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.documents
+            .map((document) => Expense.fromMap(document.data))
+            .toList());
   }
 
   void getCategories() {

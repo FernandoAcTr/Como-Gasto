@@ -11,6 +11,8 @@ import 'package:como_gasto/src/utils/utils.dart';
 import 'package:como_gasto/src/widgets/month_widget.dart';
 import 'package:como_gasto/src/firestore/db_repository.dart';
 
+import '../models/expense.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -111,15 +113,15 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         _yearSelector(),
         _monthSelector(),
-        StreamBuilder<QuerySnapshot>(
+        StreamBuilder<List<Expense>>(
             stream: Provider.of<DBRepository>(context).expensesStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                if (snapshot.data.documents.length > 0) {
+                if (snapshot.data.length > 0) {
                   return MonthWidget(
                     days: daysInMonth(dateProvider.month + 1),
                     graphType: currentGraphType,
-                    documents: snapshot.data.documents,
+                    expensesList: snapshot.data,
                     db: Provider.of<DBRepository>(context),
                   );
                 } else {
