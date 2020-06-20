@@ -2,7 +2,6 @@ import 'package:como_gasto/src/pages/details_page.dart';
 import 'package:como_gasto/src/providers/date_provider.dart';
 import 'package:como_gasto/src/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import 'package:como_gasto/src/firestore/db_repository.dart';

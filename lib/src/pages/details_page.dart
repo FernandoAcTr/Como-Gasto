@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:como_gasto/src/pages/ui/day_expense_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
