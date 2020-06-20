@@ -114,13 +114,13 @@ class MonthWidget extends StatelessWidget {
             var catTotal = categories[catName];
             double percent = 100 * catTotal / total;
 
-            return FutureBuilder(
+            return FutureBuilder<String>(
               future: db.getCategoryIcon(catName),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+              builder: (context, AsyncSnapshot<String> snapshot){
                   if(snapshot.hasData){
 
-                    if(snapshot.data.documents.length > 0){
-                      var iconName = snapshot.data.documents.first['icon'];
+                    if(snapshot.data != ''){
+                      var iconName = snapshot.data;
                       return _listItem(iconUtils.categoryIcons[iconName], catName,catTotal,percent.toStringAsFixed(2), context);
                     }else
                       return _listItem(Icons.broken_image, catName,catTotal,percent.toStringAsFixed(2), context);

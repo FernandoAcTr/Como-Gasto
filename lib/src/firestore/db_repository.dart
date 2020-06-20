@@ -127,16 +127,21 @@ class DBRepository {
             .toList());
   }
 
-  Future<QuerySnapshot> getCategoryIcon(String categoryName) async {
+  Future<String> getCategoryIcon(String categoryName) async {
     print("Peticion getCategoryIcon");
 
-    return Firestore.instance
+    final query = await Firestore.instance
         .collection('users')
         .document(_userID)
         .collection('categories')
         .where('name', isEqualTo: categoryName)
         .snapshots()
         .first;
+
+    if (query.documents.length > 0) {
+      return query.documents.first['icon'];
+    }
+    return '';
   }
 
   void getCategoryExpenses(String category, int year, int month) {
